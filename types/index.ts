@@ -21,6 +21,7 @@ export interface ReadingMaterial {
   summaryContent: string;
   coreConcepts: { title: string; description: string; citation?: string }[];
   keyTheorists: { name: string; contribution: string }[];
+  fullContent?: { heading: string; body: string }[];
   pdfUrl?: string;
   createdBy: string;
   createdAt: string;

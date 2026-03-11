@@ -18,6 +18,7 @@ interface Reading {
   summaryContent: string;
   coreConcepts: { title: string; description: string; citation?: string }[];
   keyTheorists: { name: string; contribution: string }[];
+  fullContent?: { heading: string; body: string }[];
   pdfUrl?: string;
 }
 
@@ -142,57 +143,23 @@ export default function NotesDetailPage() {
               <iframe src={reading.pdfUrl} className="w-full h-full" title="PDF Viewer" />
             </div>
           ) : (
-            <div className="space-y-5 pb-28">
-              {/* Full summary text */}
-              {reading.summaryContent && (
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                  <h2 className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-2">Overview</h2>
-                  <p className="text-sm text-gray-700 leading-relaxed">{reading.summaryContent}</p>
-                </div>
-              )}
-
-              {/* Full core concepts with complete descriptions */}
-              {reading.coreConcepts && reading.coreConcepts.length > 0 && (
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                  <h2 className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-3">Core Concepts</h2>
-                  <div className="space-y-4">
-                    {reading.coreConcepts.map((c, i) => (
-                      <div key={i} className="border-l-2 border-teal-400 pl-3">
-                        <h3 className="font-semibold text-gray-900 text-sm mb-1">{c.title}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{c.description}</p>
-                        {c.citation && (
-                          <p className="text-xs text-teal-600 mt-1 font-medium">— {c.citation}</p>
-                        )}
-                      </div>
-                    ))}
+            <div className="space-y-4 pb-28">
+              {reading.fullContent && reading.fullContent.length > 0 ? (
+                reading.fullContent.map((section, i) => (
+                  <div key={i} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <h2 className="text-sm font-bold text-gray-900 mb-2">{section.heading}</h2>
+                    <div className="space-y-3">
+                      {section.body.split('\n\n').map((para, j) => (
+                        <p key={j} className="text-sm text-gray-700 leading-relaxed">{para}</p>
+                      ))}
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
+                  No full reading available.
                 </div>
               )}
-
-              {/* Full key theorists with contributions */}
-              {reading.keyTheorists && reading.keyTheorists.length > 0 && (
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                  <h2 className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-3">Key Theorists</h2>
-                  <div className="space-y-3">
-                    {reading.keyTheorists.map((t, i) => (
-                      <div key={i} className="border-l-2 border-amber-400 pl-3">
-                        <h3 className="font-semibold text-gray-900 text-sm">{t.name}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{t.contribution}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Metadata footer */}
-              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-500">
-                  <span>Week {reading.weekNumber}</span>
-                  <span>~{reading.readingTimeMinutes} min read</span>
-                  <span>{reading.keyTermsCount} key terms</span>
-                  <span>{reading.professorName}</span>
-                </div>
-              </div>
             </div>
           )
         )}

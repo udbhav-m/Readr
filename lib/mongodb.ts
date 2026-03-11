@@ -1,6 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const MONGODB_URI = 'mongodb+srv://udbhav4:vasudhaM100@cluster0.qcvpegg.mongodb.net/readr';
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://udbhav4:udbhav@cluster0.qcvpegg.mongodb.net/readr";
 
 interface GlobalMongo {
   conn: typeof mongoose | null;

@@ -11,6 +11,11 @@ export interface IKeyTheorist {
   contribution: string;
 }
 
+export interface IFullContentSection {
+  heading: string;
+  body: string;
+}
+
 export interface IReadingMaterial extends Document {
   title: string;
   professorName: string;
@@ -21,6 +26,7 @@ export interface IReadingMaterial extends Document {
   summaryContent: string;
   coreConcepts: ICoreConcept[];
   keyTheorists: IKeyTheorist[];
+  fullContent?: IFullContentSection[];
   pdfUrl?: string;
   createdBy: mongoose.Types.ObjectId;
   createdAt: Date;
@@ -42,6 +48,10 @@ const ReadingMaterialSchema = new Schema<IReadingMaterial>({
   keyTheorists: [{
     name: String,
     contribution: String,
+  }],
+  fullContent: [{
+    heading: String,
+    body: String,
   }],
   pdfUrl: { type: String },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },

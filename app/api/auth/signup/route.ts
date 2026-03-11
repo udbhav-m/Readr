@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const token = signToken({ userId: user._id.toString(), email: user.email, name: user.name, role: user.role });
     const res = NextResponse.json({ message: 'Account created', user: { _id: user._id, name: user.name, email: user.email } }, { status: 201 });
-    res.cookies.set('token', token, { httpOnly: true, path: '/', maxAge: 60 * 60 * 24 * 7, sameSite: 'lax' });
+    res.cookies.set('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 * 24 * 7, sameSite: 'lax' });
     return res;
   } catch (err) {
     console.error(err);

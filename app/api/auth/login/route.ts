@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       message: 'Login successful',
       user: { _id: user._id, name: user.name, email: user.email, role: user.role, points: user.points, streak: user.streak, rank: user.rank }
     });
-    res.cookies.set('token', token, { httpOnly: true, path: '/', maxAge: 60 * 60 * 24 * 7, sameSite: 'lax' });
+    res.cookies.set('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 * 24 * 7, sameSite: 'lax' });
     return res;
   } catch (err) {
     console.error(err);
