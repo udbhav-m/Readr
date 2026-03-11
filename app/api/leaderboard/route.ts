@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
 import PuzzleAttempt from '@/models/PuzzleAttempt';
+import Puzzle from '@/models/Puzzle';
 import { getUserFromRequest } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -25,11 +26,22 @@ export async function GET(req: NextRequest) {
     // Get puzzle attempts this week
     const attempts = await PuzzleAttempt.find({ solved: true, completedAt: { $gte: weekStart } });
 
+    // Get puzzles created this week
+    const createdPuzzles = await Puzzle.find({ createdAt: { $gte: weekStart } });
+
     // Build weekly points map
     const weeklyPoints = new Map<string, number>();
     for (const a of attempts) {
       const uid = a.userId.toString();
-      weeklyPoints.set(uid, (weeklyPoints.get(uid) || 0) + 50);
+      let pts = 50;
+      if (a.attemptsUsed === 1) pts += 20; // first-attempt bonus
+      weeklyPoints.set(uid, (weeklyPoints.get(uid) || 0) + pts);
+    }
+
+    // Add puzzle creation points (30 per puzzle created)
+    for (const p of createdPuzzles) {
+      const uid = p.createdBy.toString();
+      weeklyPoints.set(uid, (weeklyPoints.get(uid) || 0) + 30);
     }
 
     // Include all students, even those with 0 weekly points
