@@ -199,7 +199,7 @@ export default function PlayPage() {
   }, [handleKey]);
 
   const creatorName = puzzle
-    ? typeof puzzle.createdBy === 'object'
+    ? puzzle.createdBy && typeof puzzle.createdBy === 'object'
       ? puzzle.createdBy.name
       : 'Unknown'
     : '';
@@ -246,7 +246,7 @@ export default function PlayPage() {
           ) : (
             <div className="space-y-3">
               {allPuzzles.map(p => {
-                const creator = typeof p.createdBy === 'object' ? p.createdBy.name : 'Unknown';
+                const creator = p.createdBy && typeof p.createdBy === 'object' ? p.createdBy.name : 'Unknown';
                 return (
                   <button
                     key={p._id}
